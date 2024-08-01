@@ -72,10 +72,7 @@ class UniFiController {
         response.data.data &&
         response.data.data.length > 0
       ) {
-        console.log(
-          "Create token response data:",
-          response.data.data[0].create_time
-        );
+
         return response.data.data[0];
       } else {
         throw new Error("Unexpected response format");
@@ -86,7 +83,7 @@ class UniFiController {
     }
   }
 
-  async getVoucherCode(voucherId: string): Promise<string> {
+  async getVoucherCode(): Promise<string> {
     try {
       await this.login(); // Ensure we're logged in before each request
 
@@ -102,7 +99,7 @@ class UniFiController {
         response.data.data[0] &&
         response.data.data[0].code
       ) {
-        console.log("Voucher code:", response.data);
+        //console.log("Voucher code:", response.data);
         return response.data.data[0];
       } else {
         throw new Error("Unexpected response format");

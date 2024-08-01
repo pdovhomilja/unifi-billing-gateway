@@ -1,22 +1,21 @@
 "use client";
-import { createUnifiVoucher } from "@/actions/create-token";
-import { Button } from "@/components/ui/button";
 import React from "react";
 import { Loader } from "lucide-react";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
+
+import { createUnifiVoucher } from "@/actions/create-token";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const CreateVoucherButton = () => {
   const [voucherCode, setVoucherCode] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [email, setEmail] = React.useState<string>("");
 
   const createVoucher = async () => {
+    const period = 60; // 1 hour
     setIsLoading(true);
-    const voucher: any = await createUnifiVoucher();
+    const voucher: any = await createUnifiVoucher(email, period);
     const voucherCode = voucher?.code;
     console.log("Voucher:", voucher);
 
@@ -33,7 +32,13 @@ const CreateVoucherButton = () => {
           </div>
         </Button>
       ) : (
-        <Button onClick={createVoucher}>Generate your voucher</Button>
+        <div className="flex flex-col space-y-5 min-w-[400px]">
+          <Input
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+          <Button onClick={createVoucher}>Generate your voucher</Button>
+        </div>
       )}
       {voucherCode && (
         <div className="flex flex-col space-y-5">
@@ -42,7 +47,7 @@ const CreateVoucherButton = () => {
           <div className="flex space-x-2">
             {voucherCode.split("").map((char, index) => (
               <React.Fragment key={index}>
-                <div className="rounded-md bg-gray-100 p-2 text-center w-8 border shadow-md">
+                <div className="rounded-md bg-gray-100 p-2 text-center w-10 text-xl border shadow-md">
                   {char}
                 </div>
                 {(index + 1) % 5 === 0 && index !== voucherCode.length - 1 && (
